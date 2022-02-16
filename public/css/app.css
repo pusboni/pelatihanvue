@@ -11321,3 +11321,15 @@ textarea.form-control-lg {
   vertical-align: middle;
   cursor: pointer;
 }
+
+.list li .edit {
+  font-size: 11px;
+  color: lightgreen;
+  margin-left: 5px;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.list li .done {
+  text-decoration: line-through;
+}
