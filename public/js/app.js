@@ -5398,8 +5398,30 @@ __webpack_require__.r(__webpack_exports__);
       this.input_edit = null;
     },
     confirmEdit: function confirmEdit() {
+      var _this4 = this;
+
+      var url = '/api/get_todo_edit';
       this.list[this.edit].description = this.input_edit;
-      this.cancelEdit();
+      axios.post(url, this.list[this.edit]).then(function (response) {
+        console.log(response);
+
+        _this4.cancelEdit();
+      });
+    },
+    checkList: function checkList(id, status) {
+      // let url = '/api/check_todo/'+ id + '/'+ (status ? '1' : '0')
+      var url = '/api/check_todo/' + id + '/';
+
+      if (status) {
+        url += '0';
+      } else {
+        url += '1';
+      }
+
+      axios.get(url).then(function (response) {
+        console.log(response);
+      });
+      console.log(url);
     }
   }
 });
@@ -28201,6 +28223,9 @@ var render = function () {
                         : item.status,
                     },
                     on: {
+                      click: function ($event) {
+                        return _vm.checkList(item.id, item.status)
+                      },
                       change: function ($event) {
                         var $$a = item.status,
                           $$el = $event.target,

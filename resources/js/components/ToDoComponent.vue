@@ -12,7 +12,7 @@
     <ul class="list">
       <li v-for="(item, index) in list" :key="index">
         <template v-if="index != edit">
-          <input type="checkbox" :id="list + index" v-model="item.status" />
+          <input type="checkbox" :id="list + index" v-model="item.status" v-on:click = "checkList(item.id, item.status)" />
           <label :for="list + index" :class="item.status ? 'done' : ''">{{
             item.description
           }}</label>
@@ -27,7 +27,7 @@
           </form>
         </template>
       </li>
-    </ul>
+    </ul> 
   </div>
 </template>
 
@@ -85,8 +85,26 @@ export default {
         this.input_edit = null
     },
     confirmEdit(){
+       let url = '/api/get_todo_edit'
        this.list[this.edit].description = this.input_edit
-       this.cancelEdit()
+       axios.post(url, this.list[this.edit]).then((response) => {
+          console.log(response);
+          this.cancelEdit()
+       })
+    }, 
+    checkList(id, status){
+      // let url = '/api/check_todo/'+ id + '/'+ (status ? '1' : '0')
+      let url = '/api/check_todo/'+ id + '/'
+      
+      if(status){
+        url+='0';
+      }else{
+        url+='1'
+      }
+       axios.get(url).then((response) => {
+         console.log(response);
+       })
+      console.log(url);
     }
   },
 };
