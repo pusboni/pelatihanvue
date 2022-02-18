@@ -13,4 +13,6 @@ class Task extends Model
         'description',
         'checked'
     ];
+
+    protected $connection = 'mysql';
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\TodoController;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -25,3 +26,9 @@ Route::get('/', function(){
     $newtask->save();
     return "arsyad ". $newtask;
 });
+
+Route::post('add_todo', [TodoController::class, 'addTodoTask']);
+Route::get('get_todo_list', [TodoController::class, 'displayTodoTaskList']);
+Route::post('get_todo_edit', [TodoController::class, 'editTodoTaskDescription']);
+Route::get('check_todo/{id}/{checked}', [TodoController::class, 'toggle_checkTodoTask']);
+Route::get('delete_todo/{id}', [TodoController::class, 'deleteTodoTask'])->name('delete');

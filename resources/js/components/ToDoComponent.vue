@@ -14,10 +14,10 @@
         <template v-if="index != edit">
           <input type="checkbox" :id="list + index" v-model="item.status" />
           <label :for="list + index" :class="item.status ? 'done' : ''">{{
-            item.title
+            item.description
           }}</label>
-          <span class="edit" @click="editList(index, item.title)">Edit</span>
-          <span class="delete" @click="deleteList(index)">Hapus</span>
+          <span class="edit" @click="editList(index, item.description)">Edit</span>
+          <span class="delete" @click="deleteList(index, item.id)">Hapus</span>
         </template>
         <template v-if="index == edit">
           <form class="form">
@@ -36,42 +36,56 @@ export default {
   data() {
     return {
       list: [
-        { status: false, title: "menyapu" },
-        { status: false, title: "cuci piring" },
+        { status: false, description: "menyapu" },
+        { status: false, description: "cuci piring" },
       ],
       input: null,
       edit: null,
       input_edit: null
     };
   },
+  mounted(){
+    let url = '/api/get_todo_list'
+    axios.get(url).then(response => {
+      console.log(response);
+      this.list = response.data
+    })
+  },
   methods: {
     addList() {
       let newList = {
         status: false,
-        title: this.input,
-      };
-      this.list.push(newList);
-      this.input = null;
+        description: this.input,
+      }
+      let url = '/api/add_todo'
+      axios.post(url, newList).then((response) => {
+        console.log(response.data)
+        this.list.push(response.data)
+        this.input = null;
+      })
     },
-    deleteList(index) {
-      this.list.splice(index, 1);
+    deleteList(index, id) {
+      let url = '/api/delete_todo/' + id
+      axios.get(url).then((response) => {
+        this.list.splice(index, 1);
+      })
     },
     sortASC() {
-      this.list.sort((a, b) => a.title.localeCompare(b.title));
+      this.list.sort((a, b) => a.description.localeCompare(b.description));
     },
     sortDESC() {
-      this.list.sort((a, b) => b.title.localeCompare(a.title));
+      this.list.sort((a, b) => b.description.localeCompare(a.description));
     },
-    editList(index, title){
+    editList(index, description){
         this.edit = index
-        this.input_edit = title
+        this.input_edit = description
     }, 
     cancelEdit(){
         this.edit = null
         this.input_edit = null
     },
     confirmEdit(){
-       this.list[this.edit].title = this.input_edit
+       this.list[this.edit].description = this.input_edit
        this.cancelEdit()
     }
   },
